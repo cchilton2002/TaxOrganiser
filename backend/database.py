@@ -59,7 +59,8 @@ class DatabaseManager:
                 CREATE TABLE IF NOT EXISTS earnings(                    
                     earnings_id INT AUTO_INCREMENT PRIMARY KEY,
                     payslip_id INT NOT NULL,
-                    amount FLOAT NOT NULL
+                    amount FLOAT NOT NULL,
+                    earning_type ENUM('Total Pay', 'Holiday Pay', 'Service Charge') NOT NULL,
                     FOREIGN KEY (payslip_id) REFERENCES payslips(payslip_id) ON DELETE CASCADE,
                     INDEX idx_earning_payslip (payslip_id)
                 )
@@ -145,10 +146,10 @@ class DatabaseManager:
     def add_earning(self, payslip_id: int, amount: float) -> int:
         """Add an earning entry to a payslip"""
         query = """
-            INSERT INTO earnings (payslip_id, amount)
-            VALUES (%s, %s)
+            INSERT INTO earnings (payslip_id, amount, earning_type)
+            VALUES (%s, %s, %s)
         """
-        self.cursor.execute(query, (payslip_id, amount))
+        self.cursor.execute(query, (payslip_id, amount, earning_type))
         self.conn.commit()
         return self.cursor.lastrowid
 
@@ -184,8 +185,8 @@ class DatabaseManager:
             
             payslip_id = self.insert_payslip(user_id, payment_date, pdf_path)
 
-            for each in earning:
-                self.add_earning(payslip_id, earning['amount'])
+            for earning in earning:
+                self.add_earning(payslip_id, earning['amount'], earning['type'])
 
             for deduction in deductions:
                 self.add_deduction(payslip_id, deduction['type'], deduction['amount'])

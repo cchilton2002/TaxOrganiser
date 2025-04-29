@@ -1,1 +1,1 @@
-from .settings import DB_CONFIG
+from .settings import DB_CONFIG, UPLOAD_FOLDER, ALLOWED_EXTENSIONS

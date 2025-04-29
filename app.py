@@ -1,5 +1,5 @@
 from flask import Flask
-from routes.finance import finance_bp
+from backend.routes.finance_routes import finance_bp
 from config import UPLOAD_FOLDER
 import os
 

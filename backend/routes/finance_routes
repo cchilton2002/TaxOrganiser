@@ -1,0 +1,26 @@
+from flask import Blueprint, request, jsonify
+# from werkzeug.utils import secure_filename
+import os
+from datetime import datetime
+from config import UPLOAD_FOLDER, ALLOWED_EXTENSIONS
+from database import Database
+
+finance_bp = Blueprint('finance', __name__)
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@finance_bp.route("/upload", methods=["POST"])
+def upload_payslip():
+    
+    file = request.files['file']
+        # Save PDF file
+    # filename = secure_filename(f"{date}_{file.filename}")
+    filename = file.filename
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+    filepath = os.path.join(UPLOAD_FOLDER, filename)
+    file.save(filepath)
+
+
+

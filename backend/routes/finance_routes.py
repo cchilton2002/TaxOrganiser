@@ -50,36 +50,39 @@ def upload_payslip():
     if 'employee_contribution' in parsed_data:
         deductions.append({'type': 'Pension', 'amount': parsed_data['employee_contribution']})
     
-    pension_data = {
-        'employee_contribution': parsed_data.get('pension_total', 0),
-        'employer_contribution': 0  # set as 0 or extract if available
-    }
+    pension_data = [
+        {'type': 'employee_contribution', 'amount': parsed_data.get('employee_contribution', 0)},
+        {'type': 'employer_contribution', 'amount': parsed_data.get('employer_contribution', 0)}
+    ]
 
+    payslip_id = 9999
+    db = DatabaseManager()
 
-    # db = DatabaseManager()
+    payslip_id = db.insert_complete_payslip(
+        user_id = int(user_id),
+        username = "cchilton2002",
+        email = "christoph0295@gmail.com",
+        password_hash = "this_is_a_password_hash",
+        payment_date = parsed_data['payment_date'],
+        earning = earnings,
+        deductions = deductions,
+        pension_data = pension_data,
+        pdf_path = file_path
+    )
 
-    # payslip_id = db.insert_complete_payslip(
-    #     user_id=int(user_id),
-    #     payment_date=parsed_data['payment_date'],
-    #     earnings=earnings,
-    #     deductions=deductions,
-    #     pension_data=pension_data,
-    #     pdf_path=file_path
-    # )
+    return jsonify({"message": "Payslip uploaded successfully", "payslip_id": payslip_id}), 201
 
-    # return jsonify({"message": "Payslip uploaded successfully", "payslip_id": payslip_id}), 201
-
-    payslip_id = 9999  # Just a dummy value for testing
+  # Just a dummy value for testing
 
     # Return the parsed data and dummy ID for verification
-    return jsonify({
-        "message": "Payslip parsed successfully (DB skipped)",
-        "parsed_data": parsed_data,
-        "earnings": earnings,
-        "deductions": deductions,
-        "pension_data": pension_data,
-        "payslip_id": payslip_id
-    }), 200
+    # return jsonify({
+    #     "message": "Payslip parsed successfully (DB skipped)",
+    #     "parsed_data": parsed_data,
+    #     "earnings": earnings,
+    #     "deductions": deductions,
+    #     "pension_data": pension_data,
+    #     "payslip_id": payslip_id
+    # }), 200
 
 
     

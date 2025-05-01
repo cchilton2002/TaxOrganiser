@@ -1,9 +1,7 @@
 import pandas as pd
 from typing import Dict, Optional
-import pdfplumber  
-import re
-import io
-import contextlib
+import pdfplumber, re, io, contextlib  
+from datetime import datetime
 
 def extract_text_from_pdf(pdf_path: str) -> str:
     text = ""
@@ -41,7 +39,10 @@ def extract_payslip_data(pdf_path: str) -> Dict[str, Optional[float]]:
 
         # Store values
     if date_match:
-        data['date'] = date_match.group()
+        data['payment_date'] = datetime.strptime(
+            date_match.group(), 
+            '%d/%m/%Y'
+        ).strftime('%Y-%m-%d')
     if pay_match:
         data['total_pay'] = float(pay_match.group(1))
     if tax_match:

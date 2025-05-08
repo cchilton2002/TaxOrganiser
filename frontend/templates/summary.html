@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width initial-scale=1.0"/>
+        <title>Tax Summary</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+    </head>
+    <body>
+        <div class="table-container">
+            <h1>Tax Summary</h1>
+            {% if summaries %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tax Year</th>
+                        <th>Total Gross</th>
+                        <th>Total Taxable</th>
+                        <th>Total Tax</th>
+                        <th>National Insurance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for summary in summaries %}
+                    <tr>
+                        <td>{{ summary.tax_year }}</td>
+                        <td>{{ summary.total_gross }}</td>
+                        <td>{{ summary.total_taxable }}</td>
+                        <td>{{ summary.total_tax }}</td>
+                        <td>{{ summary.total_ni }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No summary data available.</p>
+            {% endif %}
+        </div>
+    </body>
+</html>

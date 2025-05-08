@@ -9,6 +9,8 @@ from modules.parse_pdf import extract_payslip_data
 finance_bp = Blueprint('finance', __name__)
 
 
+
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 

@@ -68,5 +68,3 @@ def extract_payslip_data(pdf_path: str) -> Dict[str, Optional[float]]:
 
     return data
 
-data=extract_payslip_data("/home/cchilton2002/Downloads/document.pdf")
-print(data)

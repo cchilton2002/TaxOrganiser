@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 # from werkzeug.utils import secure_filename
 import os
 from datetime import datetime
-from config import UPLOAD_FOLDER, ALLOWED_EXTENSIONS
+from config.settings import UPLOAD_FOLDER, ALLOWED_EXTENSIONS
 from backend.database import DatabaseManager
 from modules.parse_pdf import extract_payslip_data
 
@@ -74,17 +74,19 @@ def upload_payslip():
 
     return jsonify({"message": "Payslip uploaded successfully", "payslip_id": payslip_id}), 201
 
-  # Just a dummy value for testing
+@finance_bp.route('/summary', methods=["GET"])
+def get_summary():
+    user_id = request.args.get('user_id')    
+    db = DatabaseManager()
+    
+    summary = db.get_summaries(user_id)
 
-    # Return the parsed data and dummy ID for verification
-    # return jsonify({
-    #     "message": "Payslip parsed successfully (DB skipped)",
-    #     "parsed_data": parsed_data,
-    #     "earnings": earnings,
-    #     "deductions": deductions,
-    #     "pension_data": pension_data,
-    #     "payslip_id": payslip_id
-    # }), 200
+    return jsonify({
+        "message": "Summary returned",
+        "user_id": user_id,
+        "summary": summary 
+    }), 200
+
 
 
     

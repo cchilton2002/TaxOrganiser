@@ -1,7 +1,9 @@
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
+# Get absolute path to backend/.env
+dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
+load_dotenv(dotenv_path)
 
 DB_CONFIG = {
     "host": os.getenv("DB_HOST"),
@@ -12,3 +14,4 @@ DB_CONFIG = {
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
 ALLOWED_EXTENSIONS = {'pdf'}
+

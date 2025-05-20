@@ -5,6 +5,7 @@ from datetime import datetime
 from config.settings import UPLOAD_FOLDER, ALLOWED_EXTENSIONS
 from backend.database import DatabaseManager
 from modules.parse_pdf import extract_payslip_data
+from modules.missing_payslips import find_missing_payslips
 
 finance_bp = Blueprint('finance', __name__)
 
@@ -76,15 +77,21 @@ def upload_payslip():
 
 @finance_bp.route('/summary', methods=["GET"])
 def get_summary():
-    user_id = request.args.get('user_id')    
+    user_id = request.args.get('user_id')
+    tax_year = 2025    
     db = DatabaseManager()
     
     summary = db.get_summaries(user_id)
+    
+    uploaded_dates = db.get_summary_dates(user_id, tax_year)
+    
+    missing_dates = find_missing_payslips(2025, uploaded_dates)
 
     return jsonify({
         "message": "Summary returned",
         "user_id": user_id,
-        "summary": summary 
+        "summary": summary ,
+        "missing_payslips": missing_dates
     }), 200
 
 

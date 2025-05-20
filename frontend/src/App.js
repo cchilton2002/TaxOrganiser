@@ -6,10 +6,20 @@ import'./App.css';
 
 const App = () => {
   return (
-    <div className="bg-slate-300 min-h-screen p-8">
-      <nav style={{ padding: "1rem", background: "#f0f0f0" }}>
-        <Link to="/upload" style={{ marginRight: "1rem" }}>Upload</Link>
-        <Link to="/summary">Summary</Link>
+    <div className="bg-slate-100 min-h-screen p-8">
+      <nav className="bg-white shadow-md rounded-xl px-6 py-4 mb-8 flex space-x-6 ">
+        <Link
+          to="/upload"
+          className="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200"
+        >
+          Upload
+        </Link>
+        <Link
+          to="/summary"
+          className="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200"
+        >
+          Summary
+        </Link>
       </nav>
 
       <Routes>
@@ -17,6 +27,7 @@ const App = () => {
         <Route path="/summary" element={<Summary />} />
       </Routes>
     </div>
+
   );
 };
 

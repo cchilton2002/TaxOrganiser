@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import axios from 'axios';
 
 
@@ -6,6 +6,7 @@ const Upload = () => {
   const [userId, setUserId] = useState("");
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
+  const fileInputRef = useRef(null);
 
   const handleUpload = async (e) => {
     e.preventDefault();
@@ -29,16 +30,73 @@ const Upload = () => {
     }
   }
 
+  const handleFileDelete = () => {
+    setFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = null; // reset the input manually
+    }
+  };
+
+
   return (
-    <div>
-      <h2>Upload Payslip</h2>
-      <form onSubmit={handleUpload}>
-        <input type='text' placeholder='User ID' value={userId} onChange={(e) => setUserId(e.target.value)}/>
-        <input type='file' placeholder='File Upload' accept='.pdf' onChange={(e) => setFile(e.target.files[0])}/>
-        <button type='submit'>Upload</button>
+    <div className="p-6 bg-white rounded-xl shadow-md max-w-xl mx-auto mt-8">
+      <h2 className="text-2xl font-semibold text-blue-500 mb-4">Upload Payslip</h2>
+
+      <form onSubmit={handleUpload} className="flex flex-col gap-4">
+        <input
+          type="text"
+          placeholder="User ID"
+          value={userId}
+          onChange={(e) => setUserId(e.target.value)}
+          className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+
+        <div className="flex flex-row gap-2">
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="bg-blue-100 text-blue-700 font-medium px-4 py-2 rounded hover:bg-blue-200 transition"
+            >
+              Choose File
+            </button>
+          <p className="text-sm text-gray-600">
+            {file ? `${file.name}` : "No file selected"}
+          </p>
+
+            {file && (
+              <button
+                type="button"
+                onClick={handleFileDelete}
+                className="text-red-500 hover:text-red-700 text-xl font-bold focus:outline-none"
+                aria-label="Remove file"
+              >
+                ×
+              </button>
+            )}
+          </div>
+
+
+          <input
+            type="file"
+            accept=".pdf"
+            ref={fileInputRef}
+            onChange={(e) => setFile(e.target.files[0])}
+            style={{ display: "none" }} // hide actual file input
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition"
+        >
+          Upload
+        </button>
       </form>
-      <p>{message}</p>
+
+      {message && <p className="mt-4 text-sm text-gray-700">{message}</p>}
     </div>
+
   )
 }
 

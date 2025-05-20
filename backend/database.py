@@ -1,6 +1,6 @@
 import mysql.connector
 import logging
-from datetime import datetime
+from datetime import datetime, date
 from config import DB_CONFIG
 
 logging.basicConfig(level=logging.INFO)
@@ -144,6 +144,23 @@ class DatabaseManager:
             WHERE user_id = %s
             ORDER BY tax_year DESC;
         """, (user_id,))
+        rows = self.cursor.fetchall()
+        return [dict(row) for row in rows]
+
+
+    def get_summary_dates(self, user_id: int, tax_year: int):
+        tax_year_start_str = f"{tax_year}-04-06"
+        tax_year_end = tax_year + 1
+        tax_year_end_str = f"{tax_year_end}-04-05"
+
+        self.cursor.execute("""
+            SELECT payment_date
+            FROM payslips
+            WHERE user_id = %s
+            AND payment_date >= %s
+            AND payment_date <= %s
+            ORDER BY payment_date ASC;
+        """, (user_id, tax_year_start_str, tax_year_end_str))
         rows = self.cursor.fetchall()
         return [dict(row) for row in rows]
     

@@ -4,21 +4,23 @@ import axios from 'axios';
 
 const Upload = () => {
   const [userId, setUserId] = useState("");
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState([]);
   const [message, setMessage] = useState("");
   const fileInputRef = useRef(null);
 
   const handleUpload = async (e) => {
     e.preventDefault();
 
-    if (!userId || !file){
+    if (!userId || file.length===0){
       setMessage("Please enter a user_id and upload a file.");
       return;
     }
 
     const formData = new FormData();
     formData.append("user_id", userId);
-    formData.append("file", file);
+    file.forEach((f) => {
+      formData.append("files", f);
+    });
 
     try {
       const response = await axios.post("/api/upload", formData);
@@ -31,9 +33,9 @@ const Upload = () => {
   }
 
   const handleFileDelete = () => {
-    setFile(null);
+    setFile([]);
     if (fileInputRef.current) {
-      fileInputRef.current.value = null; // reset the input manually
+      fileInputRef.current.value = null;
     }
   };
 
@@ -60,11 +62,17 @@ const Upload = () => {
             >
               Choose File
             </button>
-          <p className="text-sm text-gray-600">
-            {file ? `${file.name}` : "No file selected"}
-          </p>
+            {file.length > 0 ? (
+              <ul className="text-sm text-gray-600 space-y-1">
+                {file.map((f, idx) => (
+                  <li key={idx}>• {f.name}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-gray-600">No file selected</p>
+            )}
 
-            {file && (
+            {file.length > 0 && (
               <button
                 type="button"
                 onClick={handleFileDelete}
@@ -75,14 +83,16 @@ const Upload = () => {
               </button>
             )}
           </div>
-
-
           <input
             type="file"
             accept=".pdf"
+            multiple
             ref={fileInputRef}
-            onChange={(e) => setFile(e.target.files[0])}
-            style={{ display: "none" }} // hide actual file input
+            onChange={(e) => {
+              const selectedFiles = Array.from(e.target.files);
+              setFile((prevFiles) => [...prevFiles, ...selectedFiles]);
+            }}
+            style={{ display: "none" }}
           />
         </div>
 

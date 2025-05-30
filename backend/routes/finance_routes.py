@@ -21,6 +21,7 @@ def upload_payslip():
 
     if not user_id:
         return jsonify({"error": "User ID is required"}), 400
+        
 
     files = request.files.getlist('files')
     

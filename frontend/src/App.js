@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 import Upload from './pages/Upload';
 import Summary from './pages/Summary';
-import Payslipls from'./pages/Payslips';
+import Payslips from'./pages/Payslips';
 
 import'./App.css';
 
@@ -22,6 +22,11 @@ const App = () => {
           className="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200"
         >
           Summary
+        </Link>
+        <Link
+          to="/payslips"
+        >
+          Payslips
         </Link>
       </nav>
 
